@@ -18,11 +18,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DatabaseModule = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+const mongoose_1 = __webpack_require__(/*! @nestjs/mongoose */ "@nestjs/mongoose");
 let DatabaseModule = class DatabaseModule {
 };
 exports.DatabaseModule = DatabaseModule;
 exports.DatabaseModule = DatabaseModule = __decorate([
-    (0, common_1.Module)({})
+    (0, common_1.Module)({
+        providers: [],
+        exports: [],
+        imports: [mongoose_1.MongooseModule.forRootAsync({
+                imports: [config_1.ConfigService],
+                useFactory: (configService) => ({
+                    uri: configService.get('DATABASE_URI'),
+                }),
+                inject: [config_1.ConfigService],
+            })],
+    })
 ], DatabaseModule);
 
 
@@ -199,6 +211,16 @@ module.exports = require("@nestjs/common");
 
 /***/ }),
 
+/***/ "@nestjs/config":
+/*!*********************************!*\
+  !*** external "@nestjs/config" ***!
+  \*********************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/config");
+
+/***/ }),
+
 /***/ "@nestjs/core":
 /*!*******************************!*\
   !*** external "@nestjs/core" ***!
@@ -206,6 +228,16 @@ module.exports = require("@nestjs/common");
 /***/ ((module) => {
 
 module.exports = require("@nestjs/core");
+
+/***/ }),
+
+/***/ "@nestjs/mongoose":
+/*!***********************************!*\
+  !*** external "@nestjs/mongoose" ***!
+  \***********************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/mongoose");
 
 /***/ })
 
