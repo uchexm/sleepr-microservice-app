@@ -1,16 +1,38 @@
-import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+// import { Module } from '@nestjs/common';
+// import { ConfigModule, ConfigService } from '@nestjs/config';
+// import { MongooseModule } from '@nestjs/mongoose';
+
+// @Module({
+   
+//     imports: [MongooseModule.forRootAsync({
+//        imports: [ConfigModule],
+//         useFactory: (configService: ConfigService) => ({
+//             uri: configService.get('MONGODB_URI'),
+//         }),
+//         inject: [ConfigService],
+//     })],
+// })
+// export class DatabaseModule {}
+
+
+import { Module, Logger } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-    providers: [],
-    exports: [],
-    imports: [MongooseModule.forRootAsync({
-        imports: [ConfigService],
-        useFactory: (configService: ConfigService) => ({
-            uri: configService.get('DATABASE_URI'),
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
         }),
-        inject: [ConfigService],
-    })],
+        MongooseModule.forRootAsync({
+            imports: [ConfigModule],
+            useFactory: (configService: ConfigService) => {
+                const uri = configService.get<string>('MONGODB_URI');
+                Logger.log(`Connecting to MongoDB at ${uri}`);
+                return { uri };
+            },
+            inject: [ConfigService],
+        }),
+    ],
 })
 export class DatabaseModule {}

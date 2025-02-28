@@ -25,15 +25,20 @@ let DatabaseModule = class DatabaseModule {
 exports.DatabaseModule = DatabaseModule;
 exports.DatabaseModule = DatabaseModule = __decorate([
     (0, common_1.Module)({
-        providers: [],
-        exports: [],
-        imports: [mongoose_1.MongooseModule.forRootAsync({
-                imports: [config_1.ConfigService],
-                useFactory: (configService) => ({
-                    uri: configService.get('DATABASE_URI'),
-                }),
+        imports: [
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+            }),
+            mongoose_1.MongooseModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                useFactory: (configService) => {
+                    const uri = configService.get('MONGODB_URI');
+                    common_1.Logger.log(`Connecting to MongoDB at ${uri}`);
+                    return { uri };
+                },
                 inject: [config_1.ConfigService],
-            })],
+            }),
+        ],
     })
 ], DatabaseModule);
 
